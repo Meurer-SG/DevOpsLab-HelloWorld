@@ -5,7 +5,7 @@ on: [push]
 jobs:
 
   lint:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
       - uses: actions/checkout@v2
@@ -29,7 +29,7 @@ jobs:
 
   tests:
     needs: lint
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       matrix:
         python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
@@ -55,7 +55,7 @@ jobs:
 
   deploy:
     needs: tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
       - uses: actions/checkout@v2
@@ -65,9 +65,9 @@ jobs:
         with:
           python-version: 3.9
 
-      - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@v1
+      - name: deploy into heroku
+        uses: akhileshns/heroku-deploy@v3.12.12
         with:
-          aws_acess_keyid: ${{secrets.AWS_ACESS_KEYID}}
-          aws_secret_key: ${{secrets.AWS_SECRET_KEY}}
-          
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: ${{secrets.HEROKU_APP_NAME}}
+          heroku_email: ${{secrets.HEROKU_USER_EMAIL}}
